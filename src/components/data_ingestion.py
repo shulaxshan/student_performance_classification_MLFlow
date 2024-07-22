@@ -3,6 +3,7 @@ import sys
 from src.exception import CustomException
 from src.logger import logging
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
@@ -47,9 +48,9 @@ class DataIngestion:
             df['Grade'] = df['Grade'].map({'AA': 1, 'BA' : 2, 'BB' : 3, 'CC' : 4, 'DD' : 5, 'DC' : 6, 'CB' : 7, 'Fail':0})
 
             logging.info("Train test split initiated")
-            train_set, test_test=train_test_split(df, test_size= 0.2,random_state=42)
+            train_set, test_set=train_test_split(df, test_size= 0.2,random_state=42)
             train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
-            test_test.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
+            test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
 
             logging.info("Data ingestion completed")
 
@@ -59,15 +60,15 @@ class DataIngestion:
             logging.error(e,sys)
 
 
-if __name__ == "__main__":
-    data_ingestion=DataIngestion()
-    train_path, test_path = data_ingestion.initiate_data_ingestion()
+# if __name__ == "__main__":
+#     data_ingestion=DataIngestion()
+#     train_path, test_path = data_ingestion.initiate_data_ingestion()
 
-    data_transform = DataTransformation()
-    train_arr,test_arr,_ = data_transform.initiate_data_transformation(train_path, test_path)
+#     data_transform = DataTransformation()
+#     train_arr,test_arr,_ = data_transform.initiate_data_transformation(train_path, test_path)
 
-    model_trainer = ModelTraining()
-    print(model_trainer.initiate_model_trainer(train_arr,test_arr))
+#     model_trainer = ModelTraining()
+#     print(model_trainer.initiate_model_trainer(train_arr,test_arr))
 
 
 

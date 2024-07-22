@@ -1,6 +1,5 @@
 import sys
 from dataclasses import dataclass
-
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -16,6 +15,8 @@ from src.utils import save_object
 @dataclass
 class DataTransformationConfig:
     preprocessor_obj_file_path = os.path.join('artifacts/data_transformation', "preprocessor.pkl")
+    preprocessor_train_file_path = os.path.join('artifacts/data_transformation', "preprocessor_trained_data.npy")
+    preprocessor_test_file_path = os.path.join('artifacts/data_transformation', "preprocessor_test_data.npy")
 
 class DataTransformation:
     def __init__(self):
@@ -85,6 +86,7 @@ class DataTransformation:
 
             train_arr = np.c_[input_feature_train_arr,np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
+        
 
             logging.info(f"Saved preprocessing object")
 
@@ -92,6 +94,11 @@ class DataTransformation:
                 file_path = self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessor_obj
                 )
+            
+            os.makedirs(os.path.dirname(self.data_transformation_config.preprocessor_train_file_path),exist_ok=True)
+            np.save(self.data_transformation_config.preprocessor_train_file_path,train_arr)
+            np.save(self.data_transformation_config.preprocessor_test_file_path,test_arr)
+         
             
             return train_arr, test_arr, self.data_transformation_config.preprocessor_obj_file_path
         
